@@ -1,0 +1,29 @@
+---
+
+- name: Create a directory if it does not exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  with_items:
+    - "/opt/acmedns/config"
+    - "/opt/acmedns/data"
+
+- name: Template a file, using symbolic modes (equivalent to 0644)
+  template:
+    src: config.cfg.j2
+    dest: /opt/acmedns/config/config.cfg
+
+- name: Run podman container
+  containers.podman.podman_container:
+    name: acmedns
+    image: joohoi/acme-dns
+    state: started
+    recreate: yes
+    expose:
+      - 53
+      - 80
+    volume:
+      - /opt/acmedns/config:/etc/acme-dns:ro
+      - /opt/acmedns/data:/var/lib/acme-dns
+

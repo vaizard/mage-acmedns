@@ -1,0 +1,37 @@
+---
+
+acmedns_listen: "127.0.0.1:53"
+acmedns_public: "198.51.100.1"
+acmedns_domain: "auth.example.org"
+acmedns_loglevel: "debug"
+
+acmedns_api_ip: "0.0.0.0"
+acmedns_api_port: 443
+acmedns_api_disable_registration: "false"
+# By default we expect acmedns to sit behind a tls terminating proxy server which uses http acme
+# requests. Acme-dns allows the values: "letsencrypt", "letsencryptstaging", "cert", "none".
+# Beware: This role doesn't care to support "cert"
+acmedns_api_tls: "none"
+# CORS allow origins, wildcards can be used
+acmedns_api_corsorigins: |
+    "*"
+
+# If behind a proxy, set the header "X-Forwarded-For" to pull the IP address of the client.
+# Otherwise set to none ~
+acmedns_api_header: ~
+
+#
+# Stuff you won't need to touch. Probably.
+#
+
+# zone name server
+acmedns_nsname: "{{ acmedns_domain }}"
+# admin email address, where @ is substituted with .
+acmedns_nsadmin: "hostmaster.{{ acmedns_domain }}"
+# predefined records served in addition to the TXT
+acmedns_records: |
+    # domain pointing to the public IP of your acme-dns server 
+    "{{ acmedns_domain }}. A {{ acmedns_public }}",
+    # specify that auth.example.org will resolve any *.auth.example.org records
+    "{{ acmedns_domain }}. NS {{ acmedns_domain }}.",
+

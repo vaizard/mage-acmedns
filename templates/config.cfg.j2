@@ -1,0 +1,63 @@
+[general]
+# DNS interface. Note that systemd-resolved may reserve port 53 on 127.0.0.53
+# In this case acme-dns will error out and you will need to define the listening interface
+# for example: listen = "127.0.0.1:53"
+listen = "{{ acmedns_listen }}"
+# protocol, "both", "both4", "both6", "udp", "udp4", "udp6" or "tcp", "tcp4", "tcp6"
+protocol = "both"
+# domain name to serve the requests off of
+domain = "{{ acmedns_domain }}"
+# zone name server
+nsname = "{{ acmedns_nsname }}"
+# admin email address, where @ is substituted with .
+nsadmin = "{{ acmedns_nsadmin }}"
+# predefined records served in addition to the TXT
+records = [
+    {{ acmedns_records | indent }}
+]
+# debug messages from CORS etc
+debug = false
+
+[database]
+# Database engine to use, sqlite3 or postgres
+engine = "sqlite3"
+# Connection string, filename for sqlite3 and postgres://$username:$password@$host/$db_name for postgres
+# Please note that the default Docker image uses path /var/lib/acme-dns/acme-dns.db for sqlite3
+connection = "/var/lib/acme-dns/acme-dns.db"
+# connection = "postgres://user:password@localhost/acmedns_db"
+
+[api]
+# listen ip eg. 127.0.0.1
+ip = "{{ acmedns_api_ip }}"
+# disable registration endpoint
+disable_registration = {{ acmedns_api_disable_registration }}
+# listen port, eg. 443 for default HTTPS
+port = "{{ acmedns_api_port }}"
+# possible values: "letsencrypt", "letsencryptstaging", "cert", "none"
+tls = "{{ acmedns_api_tls }}"
+
+# only used if tls = "cert"
+#tls_cert_privkey = "/etc/tls/example.org/privkey.pem"
+#tls_cert_fullchain = "/etc/tls/example.org/fullchain.pem"
+
+# only used if tls = "letsencrypt"
+acme_cache_dir = "api-certs"
+
+# CORS AllowOrigins, wildcards can be used
+corsorigins = [
+    {{ acmedns_api_corsorigins | indent }}
+]
+# use HTTP header to get the client ip
+use_header = {% if acmedns_api_header == false %}false{% else %}true{% endif %}
+# header name to pull the ip address / list of ip addresses from
+header_name = "{{ acmedns_api_header }}"
+
+[logconfig]
+# logging level: "error", "warning", "info" or "debug"
+loglevel = "{{ acmedns_loglevel }}"
+# possible values: stdout, TODO file & integrations
+logtype = "stdout"
+# file path for logfile TODO
+# logfile = "./acme-dns.log"
+# format, either "json" or "text"
+logformat = "text"
