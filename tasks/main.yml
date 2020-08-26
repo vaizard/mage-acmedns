@@ -21,7 +21,7 @@
     state: started
     recreate: yes
     publish:
-      - 127.0.0.1:53:53
+      - 127.0.0.1:53:53/udp
       - 127.0.0.1:{{ acmedns_api_port }}:{{ acmedns_api_port }}
     volume:
       - /opt/acmedns/config:/etc/acme-dns:ro
