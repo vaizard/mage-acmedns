@@ -20,9 +20,9 @@
     image: joohoi/acme-dns
     state: started
     recreate: yes
-    expose:
-      - 53
-      - 80
+    publish:
+      - 127.0.0.1:53:53
+      - 127.0.0.1:{{ acmedns_api_port }}:{{ acmedns_api_port }}
     volume:
       - /opt/acmedns/config:/etc/acme-dns:ro
       - /opt/acmedns/data:/var/lib/acme-dns
