@@ -1,5 +1,10 @@
 ---
 
+- name: Install ntpdate
+  ansible.builtin.package:
+    name: curl
+    state: present
+
 - name: Create a directory if it does not exist
   file:
     path: "{{ item }}"
@@ -19,6 +24,10 @@
     name: acmedns
     image: joohoi/acme-dns
     state: started
+    healthcheck: 'curl --fail http://localhost/health'
+    restart_policy: on-failure
+    label:
+      io.containers.autoupdate: "image"
     recreate: yes
     publish:
       - 127.0.0.1:53:53/udp
