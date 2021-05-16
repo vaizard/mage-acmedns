@@ -25,7 +25,7 @@
     image: joohoi/acme-dns
     state: started
     healthcheck: 'curl --fail http://localhost/health'
-    restart_policy: on-failure
+    restart_policy: unless-stopped
     label:
       io.containers.autoupdate: "image"
     recreate: yes
