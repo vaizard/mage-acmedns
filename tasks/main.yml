@@ -1,6 +1,6 @@
 ---
 
-- name: Install ntpdate
+- name: Install curl
   ansible.builtin.package:
     name: curl
     state: present
@@ -31,7 +31,7 @@
     recreate: yes
     publish:
       - 127.0.0.1:53:53/udp
-      - 127.0.0.1:{{ acmedns_api_port }}:{{ acmedns_api_port }}
+      - {{ acmedns_api_port }}:{{ acmedns_api_port }}
     volume:
       - /opt/acmedns/config:/etc/acme-dns:ro
       - /opt/acmedns/data:/var/lib/acme-dns
